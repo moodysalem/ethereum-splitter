@@ -1,0 +1,15 @@
+{
+  "name": "ethereum-splitter",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moodysalem/ethereum-splitter.git"
+  },
+  "author": "Moody Salem",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/moodysalem/ethereum-splitter/issues"
+  },
+  "homepage": "https://github.com/moodysalem/ethereum-splitter#readme"
+}
