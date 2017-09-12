@@ -10,11 +10,9 @@ contract Splitter {
 
     event LogEtherPaidOut(address taker, uint paidOut);
 
-    address owner;
+    address internal owner;
 
-    mapping (address => uint) balancesOwed;
-
-    address[] haveBalances;
+    mapping (address => uint) public balancesOwed;
 
     function splitEther(address payee1, address payee2) payable {
         require(msg.value % 2 == 0);
@@ -25,38 +23,25 @@ contract Splitter {
         balancesOwed[payee2] += half;
 
         LogEtherSplit(msg.sender, payee1, payee2);
-
-        haveBalances.push(payee1);
-        haveBalances.push(payee2);
     }
 
-    function totalOwed() constant returns (uint total){
-        return this.balance;
-    }
+    function withdrawEther(address forPayee) {
+        require(balancesOwed[forPayee] > 0);
 
-    function payeeOwed(address payee) constant returns (uint amountPayeeOwed) {
-        return balancesOwed[payee];
+        uint owed = balancesOwed[forPayee];
+        balancesOwed[forPayee] = 0;
+        forPayee.transfer(owed);
+
+        LogEtherPaidOut(forPayee, owed);
     }
 
     function withdrawEther() {
-        require(balancesOwed[msg.sender] > 0);
-
-        uint owed = balancesOwed[msg.sender];
-        balancesOwed[msg.sender] = 0;
-        msg.sender.transfer(owed);
-
-        LogEtherPaidOut(msg.sender, owed);
+        withdrawEther(msg.sender);
     }
 
     function destroy(){
         require(owner == msg.sender);
-
-        for (uint i = 0; i < haveBalances.length; i++) {
-            uint toPay = balancesOwed[haveBalances[i]];
-            if (toPay > 0) {
-                haveBalances[i].transfer(toPay);
-            }
-        }
+        require(this.balance == 0);
 
         selfdestruct(owner);
     }

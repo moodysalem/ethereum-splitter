@@ -9,13 +9,13 @@ contract TestSplitter {
     function testInitialBalanceUsingDeployedContract() {
         Splitter splitter = Splitter(DeployedAddresses.Splitter());
 
-        Assert.equal(splitter.payeeOwed(tx.origin), 0, "Owner should be owed 0 initially");
+        Assert.equal(splitter.balancesOwed(tx.origin), 0, "Owner should be owed 0 initially");
     }
 
     function testInitialBalanceWithNewSplitter() {
         Splitter splitter = new Splitter();
 
-        Assert.equal(splitter.payeeOwed(tx.origin), 0, "Owner should be owed 0 initially");
+        Assert.equal(splitter.balancesOwed(tx.origin), 0, "Owner should be owed 0 initially");
     }
 
 }

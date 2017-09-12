@@ -4,7 +4,7 @@ contract('Splitter', function (accounts) {
 
   it('should have empty balance to start', function () {
     return Splitter.deployed()
-      .then(instance => instance.payeeOwed(accounts[0]))
+      .then(instance => instance.balancesOwed(accounts[0]))
       .then(balance => {
         assert.equal(balance.valueOf(), 0, '0 wasn\'t the initial balance');
       });
@@ -13,9 +13,6 @@ contract('Splitter', function (accounts) {
   it('should fail if no ether is sent', function (done) {
     Splitter.deployed()
       .then(instance => instance.splitEther(accounts[1], accounts[2], {from: accounts[0], value: 0}))
-      .then(() => {
-        assert.fail();
-      })
       .catch(() => done());
   });
 
@@ -30,7 +27,7 @@ contract('Splitter', function (accounts) {
     Splitter.deployed()
       .then(instance => _instance = instance)
       .then(
-        () => _instance.payeeOwed(accounts[0])
+        () => _instance.balancesOwed(accounts[0])
       )
       .then(owed0 => {
         assert.equal(owed0, 0, 'account 0 is not owed any ether');
@@ -50,8 +47,8 @@ contract('Splitter', function (accounts) {
       .then(
         () =>
           Promise.all([
-            _instance.payeeOwed(accounts[1]),
-            _instance.payeeOwed(accounts[2])
+            _instance.balancesOwed(accounts[1]),
+            _instance.balancesOwed(accounts[2])
           ])
       )
       .then(
@@ -66,8 +63,8 @@ contract('Splitter', function (accounts) {
       )
       .then(
         () => Promise.all([
-          _instance.payeeOwed(accounts[1]),
-          _instance.payeeOwed(accounts[2])
+          _instance.balancesOwed(accounts[1]),
+          _instance.balancesOwed(accounts[2])
         ])
       )
       .then(
